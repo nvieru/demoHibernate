@@ -1,71 +1,80 @@
 import entity.Person;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
+import entity.dao.PersonDao;
 import org.hibernate.SessionFactory;
-import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
-import java.util.List;
+import java.util.*;
 
 public class Application {
 
-    private static SessionFactory factory;
+  private static SessionFactory factory;
+  private static Scanner scanner;
+  private static PersonDao personDao;
 
-    public static void main(String[] args) {
+  public static void main(String[] args) {
 
-        try {
-            factory = new Configuration().configure().buildSessionFactory();
-        } catch (Throwable ex) {
-            System.err.println("Failed to create sessionFactory object." + ex);
-            throw new ExceptionInInitializerError(ex);
-        }
-
-        Application app = new Application();
-
-        app.addPerson("Nicolae", "Vieru", 33);
-
-        app.findAllPersons();
-
+    try {
+      factory = new Configuration().configure().buildSessionFactory();
+    } catch (Throwable ex) {
+      System.err.println("Failed to create sessionFactory object." + ex);
+      throw new ExceptionInInitializerError(ex);
     }
 
-    public Integer addPerson(String fname, String lname, int age) {
-        Session session = factory.openSession();
-        Transaction tx = null;
-        Integer personId = null;
+    scanner = new Scanner(System.in);
+    Application app = new Application();
+    personDao = new PersonDao(factory);
+    app.createUser(app);
 
-        try {
-            tx = session.beginTransaction();
-            Person person = new Person(fname, lname, age);
+    app.findAllPersons();
 
-            personId = (Integer) session.save(person);
-            tx.commit();
-        } catch (HibernateException e) {
-            if (tx != null) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-        return personId;
+    app.updateUser(app);
+  }
+
+  private void findAllPersons() {
+    List<Person> persons = personDao.findAllPersons();
+
+    for (Person person : persons) {
+      System.out.print("First Name: " + person.getFirstName());
+      System.out.print("  Last Name: " + person.getLastName());
+      System.out.println("  age: " + person.getAge());
     }
+  }
 
-    public void findAllPersons() {
-        Session session = factory.openSession();
-        Transaction tx = null;
+  private void updateUser(Application app) {
+    String firstName;
+    String lastName;
+    int age;
+    System.out.println("firstName = ");
+    firstName = scanner.nextLine();
 
-        try {
-            tx = session.beginTransaction();
-            List<Person> persons = session.createQuery("FROM Person ").list();
-            for (Person person : persons) {
-                System.out.print("First Name: " + person.getFirstName());
-                System.out.print("  Last Name: " + person.getLastName());
-                System.out.println("  Salary: " + person.getAge());
-            }
-            tx.commit();
-        } catch (HibernateException e) {
-            if (tx != null) tx.rollback();
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
+    System.out.println("lastName = ");
+    lastName = scanner.nextLine();
+
+    List<Person> people = personDao.findByFirstNameAndLastName(firstName, lastName);
+
+    System.out.println("age for update = ");
+    age = scanner.nextInt();
+
+    for (Person person : people) {
+      person.setAge(age);
+      personDao.saveOrUpdate(person);
     }
+  }
+
+  private void createUser(Application app) {
+    String firstName;
+    String lastName;
+    int age;
+
+    System.out.println("firstName = ");
+    firstName = scanner.nextLine();
+
+    System.out.println("lastName = ");
+    lastName = scanner.nextLine();
+
+    System.out.println("age = ");
+    age = scanner.nextInt();
+
+    personDao.addPerson(firstName, lastName, age);
+  }
 }
