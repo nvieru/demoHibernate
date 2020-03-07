@@ -44,6 +44,7 @@ public class Application {
     String firstName;
     String lastName;
     int age;
+    scanner.nextLine();
     System.out.println("firstName = ");
     firstName = scanner.nextLine();
 

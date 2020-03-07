@@ -19,13 +19,13 @@ public class PersonDao {
         this.factory = factory;
     }
 
-    public void addPerson(String fname, String lname, int age) {
+    public void addPerson(String firstName, String lastName, int age) {
         Session session = factory.openSession();
         Transaction tx = null;
 
         try {
             tx = session.beginTransaction();
-            Person person = new Person(fname, lname, age);
+            Person person = new Person(firstName, lastName, age);
 
             session.save(person);
             tx.commit();
