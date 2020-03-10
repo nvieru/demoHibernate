@@ -4,13 +4,13 @@
 <hibernate-configuration>
     <session-factory>
 
-        <property name="connection.url">jdbc:postgresql://localhost:5432/postgres</property> <!-- BD Mane -->
+        <property name="connection.url">jdbc:postgresql://localhost:5432/postgres</property> <!-- URL baza de date -->
         <property name="connection.driver_class">org.postgresql.Driver</property> <!-- DB Driver -->
         <property name="connection.username">postgres</property> <!-- DB User -->
-        <property name="connection.password">password1</property> <!-- DB Password -->
+        <property name="connection.password">password</property> <!-- DB Password -->
 
-        <property name="dialect">org.hibernate.dialect.PostgreSQL95Dialect</property> <!-- DB Dialect -->
-        <property name="hbm2ddl.auto">update</property> <!-- create / create-drop / update -->
+        <property name="dialect">org.hibernate.dialect.PostgreSQL95Dialect</property> <!-- DB Dialect pentru postgres -->
+        <property name="hbm2ddl.auto">update</property> <!-- create / create-drop / update alte valori posibile -->
 
         <property name="show_sql">true</property> <!-- Show SQL in console -->
         <property name="format_sql">true</property> <!-- Show SQL formatted -->

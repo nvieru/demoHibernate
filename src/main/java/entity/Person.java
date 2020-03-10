@@ -5,6 +5,9 @@ import javax.persistence.*;
 @Entity
 @Table(name = "person")
 public class Person {
+
+    // ID-ul din baza de date. Valoarea este luata dintr-o secventa hibernate_sequence
+    // maparea se face dupa nume in adnotarea @Column
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     @Column(name = "id")
